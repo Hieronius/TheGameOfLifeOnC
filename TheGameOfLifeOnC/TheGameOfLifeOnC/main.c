@@ -10,6 +10,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+// MARK: ncurses library guide
+
+// 1. initscr() - first command to initiate a programm with ncurses
+// It will initialize all the tools and options of the Ncurses
+// Also it's will refresh to clear the screen
+
+// 2. cbreak() -
+
+// 3. noecho() -
+
+// 4. nodelay(stdscr, TRUE) -
+
+// 5. endwin() -
+
+
 #define N 25  // высота
 #define M 80  // ширина
 
@@ -19,19 +34,28 @@ void initialization(int A[N][M]);
 void update() { printf("\033[H\033[J"); }
 
 int main() {
+    /// First matrix to store the game field
     int A[N][M];
+    /// Second matrix to store the second one game field
     int B[N][M];
+    // Speed of the game
     int speed = 1000;
+    // Seems like a cycle phase of the last living cells
     int era = 0;
+    // Some kind of the counter inside the program
     int life = 0;
+    // Start configuration of the game field settings
     initialization(A);
 
+    // Control operation block of Ncurses (library)
+    // It's a way to substitute the mouse and let the user work with graphic, sound and other tools right from the terminal line.
     initscr();
     cbreak();
     noecho();
 
     nodelay(stdscr, TRUE);
 
+    // Main cycle of the program. Until it end cells will grow and die without any limit of speed
     while (life == 0) {
         printf("ERA: %d\n", era);
         rendering(A);
@@ -42,6 +66,8 @@ int main() {
             printf("LIFE IS OVER");
             life = 1;
         }
+        // Block of code to set the speed of the game by input different keys
+        // Can't be faster than 5000
         int input = getch();
         if (input == 'f') {
             speed -= 200;
@@ -50,8 +76,11 @@ int main() {
         } else if (input == 'q') {
             exit(1);
         }
+        // Add a new era to the counter each iteration of TheGameOfLife cycle
         era += 1;
     }
+    // You should initiate this command each time when programm is done.
+    // So it will return to the basic settings before Ncurses implementation.
     endwin();
     return 0;
 }
@@ -101,7 +130,7 @@ int creating_points(int A[N][M], int B[N][M]) {
     }
     return life;
 }
-
+// Open the file and get it's data to initialize game elements algorithms
 void initialization(int A[N][M]) {
     // Заполнение массива информацией из файла    `
     for (int i = 0; i < N; i++) {
@@ -112,12 +141,13 @@ void initialization(int A[N][M]) {
             }
         }
     }
+    // Get access to the file
     FILE* fp = freopen("/dev/tty", "r", stdin);
     if (fp == NULL) {
         exit(1);
     }
 }
-
+// Draw the game field
 void rendering(int A[N][M]) {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < M; j++) {
