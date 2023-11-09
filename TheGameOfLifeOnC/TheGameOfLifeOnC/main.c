@@ -24,6 +24,10 @@
 
 // 5. endwin() -
 
+// I should run the programme with gcc - flags - check of the array - flag -lncurses
+
+// Also -fsanitize=address - mean a check of correct filling of the array
+
 
 #define N 25  // высота
 #define M 80  // ширина
@@ -34,9 +38,9 @@ void initialization(int A[N][M]);
 void update() { printf("\033[H\033[J"); }
 
 int main() {
-    /// First matrix to store the game field
+    /// First matrix to store the game field from the txt file
     int A[N][M];
-    /// Second matrix to store the second one game field
+    /// Second matrix to store the second one game field (there we should store our game element positions calculation and send it back to the matrix A)
     int B[N][M];
     // Speed of the game
     int speed = 1000;
